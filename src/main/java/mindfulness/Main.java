@@ -41,8 +41,8 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException, AWTException {
 		final Preferences userPrefs = Preferences.userRoot().node("mindfulness");
-		final long delay = userPrefs.getLong("delay", 15 * MINUTES);
-		final Reminder reminder = new Reminder(delay);
+		final long delay = userPrefs.getLong("delay", 15);
+		final Reminder reminder = new Reminder(delay * MINUTES);
 		
 		if (SystemTray.isSupported()) {
 			try {
@@ -75,7 +75,7 @@ public class Main {
 					frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 					
 					
-					final JTextField delayField = new JTextField(String.valueOf(userPrefs.getLong("delay", 15 * MINUTES)));
+					final JTextField delayField = new JTextField(String.valueOf(userPrefs.getLong("delay", 15)));
 					
 					JButton okButton = new JButton(new AbstractAction("OK") {
 						
@@ -89,7 +89,7 @@ public class Main {
 									public void run() {
 										userPrefs.putLong("delay", value);
 										reminder.stop();
-										reminder.setDelay(value);
+										reminder.setDelay(value * MINUTES);
 										Thread t = new Thread(reminder);
 										t.start();
 									}
@@ -110,7 +110,7 @@ public class Main {
 						}
 					});
 
-					JLabel label = new JLabel("Delay (milliseconds): ");
+					JLabel label = new JLabel("Delay (minutes): ");
 					
 					JPanel panel = new JPanel();
 					SpringLayout layout = new SpringLayout();
@@ -136,7 +136,7 @@ public class Main {
 					layout.putConstraint(SpringLayout.BASELINE, closeButton, 0, SpringLayout.BASELINE, label);
 
 
-					panel.setPreferredSize(new Dimension(400, 30));
+					panel.setPreferredSize(new Dimension(300, 30));
 					frame.getContentPane().add(panel);
 					frame.pack();
 					
